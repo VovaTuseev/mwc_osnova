@@ -1,12 +1,15 @@
 import re
 from tkinter import CENTER, StringVar, END
 from typing import Pattern
-
 import psycopg2
 import customtkinter as ctk
 import PIL
 from PIL import ImageTk, Image
 from customtkinter import CTkLabel
+
+
+global PASSWORD
+global LOGIN
 
 
 def password_check(password):

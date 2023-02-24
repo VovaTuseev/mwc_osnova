@@ -6,6 +6,8 @@ import tkinter
 import datetime
 import os
 from db_file import registration_function
+from db_file import LOGIN
+from db_file import PASSWORD
 
 
 class MyConfigFrame(ctk.CTkFrame):
@@ -15,9 +17,12 @@ class MyConfigFrame(ctk.CTkFrame):
 
 
 class left_show_frame(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+    def __init__(self, master, login, password):
 
+        self.login = login
+        self.password = password
+
+        super().__init__(master)
         self.autoriz = ctk.CTkFrame(master, fg_color='#262626')
         auto = AuthorizationFrame(self.autoriz)
         self.autoriz.place(x=10, y=10)
@@ -36,8 +41,8 @@ class left_show_frame(ctk.CTkFrame):
 
 
 class AuthorizationFrame(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+    def __init__(self, master):
+        super().__init__(master)
         # Настройка авторизации/регистрации----------------------------------------------------------------------------
         self.autoreg_frame = ctk.CTkFrame(master, fg_color='#262626')
         font_main = ctk.CTkFont(family="helvetica", size=15)
