@@ -4,7 +4,7 @@ from PIL import *
 import cv2
 from tab_view import *
 from tab_config import *
-
+from db_file import *
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
@@ -25,4 +25,5 @@ class App(customtkinter.CTk):
 
 
 app = App()
+
 app.mainloop()

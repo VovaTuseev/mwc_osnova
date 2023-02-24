@@ -5,6 +5,7 @@ from tkcalendar import Calendar
 import tkinter
 import datetime
 import os
+from db_file import registration_function
 
 
 class MyConfigFrame(ctk.CTkFrame):
@@ -17,6 +18,26 @@ class left_show_frame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.autoriz = ctk.CTkFrame(master, fg_color='#262626')
+        auto = AuthorizationFrame(self.autoriz)
+        self.autoriz.place(x=10, y=10)
+
+        # Настройка фрейма со списком камер
+        self.list_cam_frame = ctk.CTkFrame(master, fg_color='#262626')
+
+        first = ConfigCAM(self.list_cam_frame, 'CAM1')
+        second = ConfigCAM(self.list_cam_frame, 'CAM2')
+        third = ConfigCAM(self.list_cam_frame, 'CAM3')
+        fourth = ConfigCAM(self.list_cam_frame, 'CAM4')
+
+        self.list_cam_frame.place(x=300, y=10)
+
+        # --------------------------------------------------------------------------------------------------------------
+
+
+class AuthorizationFrame(ctk.CTkFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
         # Настройка авторизации/регистрации----------------------------------------------------------------------------
         self.autoreg_frame = ctk.CTkFrame(master, fg_color='#262626')
         font_main = ctk.CTkFont(family="helvetica", size=15)
@@ -52,7 +73,7 @@ class left_show_frame(ctk.CTkFrame):
         label_registration = ctk.CTkLabel(registration_label, text="Нет аккаунта?")
         label_registration.pack()
 
-        btn_registration = ctk.CTkButton(registration_btn, text="Регистрирация")
+        btn_registration = ctk.CTkButton(registration_btn, text="Регистрирация", command=registration_function)
         btn_registration.pack(pady=10)
 
         photo_frame.pack(anchor=W)
@@ -64,26 +85,17 @@ class left_show_frame(ctk.CTkFrame):
         registration_label.pack(anchor=CENTER)
         registration_btn.pack(anchor=CENTER)
 
-        self.autoreg_frame.place(x=10, y=10)
-
-        # Настройка фрейма со списком камер
-        self.list_cam_frame = ctk.CTkFrame(master)
-
-        fr = ConfigCAM(self.list_cam_frame)
-        fr.password_cam = "*****"
-        fr.ip_address_cam = "192.124.45.22"
-        fr.name_cam = "CAM1"
-
-        self.list_cam_frame.place(x=300, y=15)
-
-        # --------------------------------------------------------------------------------------------------------------
+        self.autoreg_frame.pack(padx=5, pady=5)
 
 
 class ConfigCAM(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+    def __init__(self, master, name_cam_ent):
+        self.name_cam = name_cam_ent
+        super().__init__(master)
 
-        self.name_cam = ""
+        def write_name_cam(ent, s):  # Функция записи имени в текстовое поле ткинтер
+            ent.insert(0, s)
+            ent.configure(state='disabled')
         self.ip_address_cam = ""
         self.password_cam = ""
 
@@ -93,9 +105,8 @@ class ConfigCAM(ctk.CTkFrame):
         name_cam = ctk.CTkLabel(self.frame_cam, text="Камера")
         name_cam.grid(column=0, row=0)
 
-        self.name_entry = ctk.CTkEntry(self.frame_cam)
-        self.name_entry.insert(END, self.name_cam)
-        self.name_entry.grid(column=0, row=1, padx=30)
+        self.name_entry = ctk.CTkEntry(self.frame_cam, justify='center')
+        self.name_entry.grid(column=0, row=1, padx=10)
 
         address_cam = ctk.CTkLabel(self.frame_cam, text="IP-адрес камеры")
         address_cam.grid(column=1, row=0)
@@ -109,5 +120,10 @@ class ConfigCAM(ctk.CTkFrame):
         self.password_entry = ctk.CTkEntry(self.frame_cam)
         self.password_entry.grid(column=2, row=1, padx=30, pady=10)
 
-        self.frame_cam.pack()
+        self.btn_change = ctk.CTkButton(self.frame_cam, text="Редактировать")
+        self.btn_change.grid(column=3, row=1, padx=10)
+
+        write_name_cam(self.name_entry, name_cam_ent)
+
+        self.frame_cam.pack(padx=60, pady=15)
 
