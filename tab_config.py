@@ -6,8 +6,7 @@ import tkinter
 import datetime
 import os
 from db_file import registration_function
-from db_file import LOGIN
-from db_file import PASSWORD
+from db_file import authorization_function
 
 
 class MyConfigFrame(ctk.CTkFrame):
@@ -17,11 +16,7 @@ class MyConfigFrame(ctk.CTkFrame):
 
 
 class left_show_frame(ctk.CTkFrame):
-    def __init__(self, master, login, password):
-
-        self.login = login
-        self.password = password
-
+    def __init__(self, master):
         super().__init__(master)
         self.autoriz = ctk.CTkFrame(master, fg_color='#262626')
         auto = AuthorizationFrame(self.autoriz)
@@ -72,7 +67,8 @@ class AuthorizationFrame(ctk.CTkFrame):
         entry_password = ctk.CTkEntry(pas_entry_frame, width=150)
         entry_password.pack()
 
-        btn_login = ctk.CTkButton(btn_login_frame, text="Авторизоваться")
+        btn_login = ctk.CTkButton(btn_login_frame, text="Авторизоваться",
+                                  command=authorization_function(entry_login, entry_password))
         btn_login.pack(pady=15)
 
         label_registration = ctk.CTkLabel(registration_label, text="Нет аккаунта?")

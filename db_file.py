@@ -6,13 +6,12 @@ import customtkinter as ctk
 import PIL
 from PIL import ImageTk, Image
 from customtkinter import CTkLabel
+from numpy.core.defchararray import upper
+import start_window
+from start_window import *
 
 
-global PASSWORD
-global LOGIN
-
-
-def password_check(password):
+def password_check(password):  # Функция проверки задания пароля
     """
     Verify the strength of 'password'
     Returns a dict indicating the wrong criteria
@@ -56,7 +55,8 @@ def password_check(password):
         return "Пароль должен содержать хотя бы 1 символ"
 
 
-def registration_function():
+def registration_function():  # Обработка регистрации
+
     def in_bd(login, password):
         try:
             # Подключиться к существующей базе данных
@@ -72,10 +72,10 @@ def registration_function():
                                                VALUES (%s,%s)"""
             record_to_insert = (login, password)
             cursor.execute(postgres_insert_query, record_to_insert)
-
             connection.commit()
             count = cursor.rowcount
-            print(count, "Запись успешно добавлена ​​в таблицу mobile")
+            print(count, "Запись успешно добавлена в таблицу")
+            connection.commit()
 
         except Exception as error:
             print("Ошибка при работе с PostgreSQL", error)
@@ -84,6 +84,37 @@ def registration_function():
                 cursor.close()
                 connection.close()
                 print("Соединение с PostgreSQL закрыто")
+        print(upper(login))
+        create_table(login)
+
+    def create_table(login):
+        try:
+            # Подключиться к существующей базе данных
+            connection = psycopg2.connect(user="postgres",
+                                          # пароль, который указали при установке PostgreSQL
+                                          password="tuiiutVT29072001",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="VKR")
+
+            # Создайте курсор для выполнения операций с базой данных
+            cursor = connection.cursor()
+            # SQL-запрос для создания новой таблицы
+            create_table_query = '''CREATE TABLE ''' + str(upper(login)) + ''' (NAME_CAM VARCHAR(10) NOT NULL,
+            IP_CAM VARCHAR(20),
+            PASSWORD_CAM VARCHAR(20)); '''
+            # Выполнение команды: это создает новую таблицу
+            cursor.execute(create_table_query)
+            connection.commit()
+            print("Таблица успешно создана в PostgreSQL")
+
+        except Exception as error:
+            print("Ошибка при работе с PostgreSQL", error)
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+            print("Соединение с PostgreSQL закрыто")
 
     def get_text():
         login = entry_login.get()
@@ -137,4 +168,7 @@ def registration_function():
     registration_window.mainloop()
 
 
-
+def authorization_function(entry_login, entry_password):  # Функция обработки авторизации
+    def get_text():
+        login = entry_login.get()
+        password = entry_password.get()
