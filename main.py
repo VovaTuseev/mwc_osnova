@@ -5,6 +5,8 @@ import cv2
 from tab_view import *
 from tab_config import *
 from db_file import *
+from start_window import take_pass_postgresql
+
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
@@ -24,6 +26,7 @@ class App(customtkinter.CTk):
         self.fr = MyFrameView(master=self, height=self.winfo_screenheight(), width=self.winfo_screenwidth())
 
 
+take_pass_postgresql()
 app = App()
 
 app.mainloop()

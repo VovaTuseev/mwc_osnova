@@ -8,7 +8,7 @@ from PIL import ImageTk, Image
 from customtkinter import CTkLabel
 from numpy.core.defchararray import upper
 import start_window
-from start_window import *
+from start_window import password_postgres
 
 
 def password_check(password):  # Функция проверки задания пароля
@@ -55,17 +55,17 @@ def password_check(password):  # Функция проверки задания 
         return "Пароль должен содержать хотя бы 1 символ"
 
 
-def registration_function():  # Обработка регистрации
-
+# Функция обработки регистрации ----------------------------------------------------------------------------------------
+def registration_function():
     def in_bd(login, password):
         try:
             # Подключиться к существующей базе данных
             connection = psycopg2.connect(user="postgres",
                                           # пароль, который указали при установке PostgreSQL
-                                          password="tuiiutVT29072001",
+                                          password=start_window.password_postgres,
                                           host="127.0.0.1",
                                           port="5432",
-                                          database="VKR")
+                                          database="database_cam")
 
             cursor = connection.cursor()
             postgres_insert_query = """ INSERT INTO login_password (name_login, name_password)
@@ -84,46 +84,51 @@ def registration_function():  # Обработка регистрации
                 cursor.close()
                 connection.close()
                 print("Соединение с PostgreSQL закрыто")
-        print(upper(login))
-        create_table(login)
+        insert_rows(start_window.login_acc, 'CAM1')
+        insert_rows(start_window.login_acc, 'CAM2')
+        insert_rows(start_window.login_acc, 'CAM3')
+        insert_rows(start_window.login_acc, 'CAM4')
 
-    def create_table(login):
+    # Функция записи наименования камер САМ1-САМ4 в таблицу без ip и пароля ----------------------------------------
+
+    def insert_rows(login, number_cam):
         try:
+
             # Подключиться к существующей базе данных
             connection = psycopg2.connect(user="postgres",
                                           # пароль, который указали при установке PostgreSQL
-                                          password="tuiiutVT29072001",
+                                          password=start_window.password_postgres,
                                           host="127.0.0.1",
                                           port="5432",
-                                          database="VKR")
+                                          database="database_cam")
 
             # Создайте курсор для выполнения операций с базой данных
             cursor = connection.cursor()
             # SQL-запрос для создания новой таблицы
-            create_table_query = '''CREATE TABLE ''' + str(upper(login)) + ''' (NAME_CAM VARCHAR(10) NOT NULL,
-            IP_CAM VARCHAR(20),
-            PASSWORD_CAM VARCHAR(20)); '''
+            insert_query = '''INSERT INTO USER_CAM (USERNAME, NAME_CAM, IP_CAM, 
+                    PASSWORD_CAM) VALUES (\'''' + str(login) + '''\',\'''' + str(number_cam) + '''\','','');'''
             # Выполнение команды: это создает новую таблицу
-            cursor.execute(create_table_query)
+            cursor.execute(insert_query)
             connection.commit()
-            print("Таблица успешно создана в PostgreSQL")
+            print("Строка успешно добавлена в PostgreSQL")
 
         except Exception as error:
-            print("Ошибка при работе с PostgreSQL", error)
+            print("Ошибка при добавлении строки в PostgreSQL", error)
         finally:
             if connection:
                 cursor.close()
                 connection.close()
-            print("Соединение с PostgreSQL закрыто")
+                print("Соединение с PostgreSQL закрыто")
 
     def get_text():
-        login = entry_login.get()
+        start_window.login_acc = entry_login.get()
+        print(start_window.login_acc)
         password_one = entry_password_first.get()
         password_two = entry_password_second.get()
         r = password_check(password_one)
 
         if password_one == password_two and r is True:
-            in_bd(login, password_one)
+            in_bd(start_window.login_acc, password_one)
             registration_window.destroy()
         else:
             if password_one != password_two:

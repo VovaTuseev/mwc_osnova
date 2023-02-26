@@ -8,6 +8,8 @@ import os
 from db_file import registration_function
 from db_file import authorization_function
 
+global switch_flag
+
 
 class MyConfigFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -15,13 +17,18 @@ class MyConfigFrame(ctk.CTkFrame):
         self.left_s_f = left_show_frame(master)
 
 
+# --------------------------------------------------------------------------------------------------------------
+
+
 class left_show_frame(ctk.CTkFrame):
+    global switch_flag
+
     def __init__(self, master):
         super().__init__(master)
+
         self.autoriz = ctk.CTkFrame(master, fg_color='#262626')
         auto = AuthorizationFrame(self.autoriz)
         self.autoriz.place(x=10, y=10)
-
         # Настройка фрейма со списком камер
         self.list_cam_frame = ctk.CTkFrame(master, fg_color='#262626')
 
@@ -31,8 +38,6 @@ class left_show_frame(ctk.CTkFrame):
         fourth = ConfigCAM(self.list_cam_frame, 'CAM4')
 
         self.list_cam_frame.place(x=300, y=10)
-
-        # --------------------------------------------------------------------------------------------------------------
 
 
 class AuthorizationFrame(ctk.CTkFrame):
@@ -74,7 +79,8 @@ class AuthorizationFrame(ctk.CTkFrame):
         label_registration = ctk.CTkLabel(registration_label, text="Нет аккаунта?")
         label_registration.pack()
 
-        btn_registration = ctk.CTkButton(registration_btn, text="Регистрирация", command=registration_function)
+        btn_registration = ctk.CTkButton(registration_btn, text="Регистрирация",
+                                         command=registration_function)
         btn_registration.pack(pady=10)
 
         photo_frame.pack(anchor=W)
@@ -91,12 +97,12 @@ class AuthorizationFrame(ctk.CTkFrame):
 
 class ConfigCAM(ctk.CTkFrame):
     def __init__(self, master, name_cam_ent):
-        self.name_cam = name_cam_ent
         super().__init__(master)
 
         def write_name_cam(ent, s):  # Функция записи имени в текстовое поле ткинтер
             ent.insert(0, s)
             ent.configure(state='disabled')
+
         self.ip_address_cam = ""
         self.password_cam = ""
 
@@ -121,10 +127,63 @@ class ConfigCAM(ctk.CTkFrame):
         self.password_entry = ctk.CTkEntry(self.frame_cam)
         self.password_entry.grid(column=2, row=1, padx=30, pady=10)
 
-        self.btn_change = ctk.CTkButton(self.frame_cam, text="Редактировать")
+        self.btn_change = ctk.CTkButton(self.frame_cam, text="Сохранить")
         self.btn_change.grid(column=3, row=1, padx=10)
 
         write_name_cam(self.name_entry, name_cam_ent)
 
         self.frame_cam.pack(padx=60, pady=15)
 
+
+class AuthorizationFrameTrue(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        # Настройка авторизации/регистрации----------------------------------------------------------------------------
+        self.autoreg_frame = ctk.CTkFrame(master, fg_color='#262626')
+        font_main = ctk.CTkFont(family="helvetica", size=15)
+
+        photo_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        login_label_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        login_entry_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        pas_label_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        pas_entry_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        btn_exit_frame = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        load_label = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+        load_label_btn = ctk.CTkFrame(self.autoreg_frame, fg_color='#262626')
+
+        img = ctk.CTkImage(dark_image=Image.open("ava-transformed.png"), size=(100, 100))
+        label_ava = CTkLabel(photo_frame, text='', image=img)
+        label_ava.pack(padx=80, pady=10)
+
+        label_login = ctk.CTkLabel(login_label_frame, text="Логин", font=font_main)
+        label_login.pack(anchor=CENTER, pady=5)
+
+        entry_login = ctk.CTkEntry(login_entry_frame, width=150)
+        entry_login.pack()
+
+        label_password = ctk.CTkLabel(pas_label_frame, text="Пароль", font=font_main)
+        label_password.pack(pady=5)
+
+        entry_password = ctk.CTkEntry(pas_entry_frame, width=150)
+        entry_password.pack()
+
+        btn_login = ctk.CTkButton(btn_exit_frame, text="Выйти",
+                                  command=authorization_function(entry_login, entry_password))
+        btn_login.pack(pady=15)
+
+        label_registration = ctk.CTkLabel(load_label, text="Загрузка настроек пользователя")
+        label_registration.pack()
+
+        btn_registration = ctk.CTkButton(load_label_btn, text="Загрузить", command=registration_function)
+        btn_registration.pack(pady=10)
+
+        photo_frame.pack(anchor=W)
+        login_label_frame.pack(anchor=CENTER)
+        login_entry_frame.pack(anchor=CENTER)
+        pas_label_frame.pack(anchor=CENTER)
+        pas_entry_frame.pack(anchor=CENTER)
+        btn_exit_frame.pack(anchor=CENTER)
+        load_label.pack(anchor=CENTER)
+        load_label_btn.pack(anchor=CENTER)
+
+        self.autoreg_frame.pack(padx=5, pady=5)
