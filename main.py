@@ -28,5 +28,10 @@ class App(customtkinter.CTk):
 
 take_pass_postgresql()
 app = App()
-
 app.mainloop()
+
+# j = ctk.CTk()
+# fr = ConfigPlaceCam(j)
+# fr.pack()
+# j.mainloop()
+
