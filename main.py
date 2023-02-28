@@ -2,6 +2,8 @@ import customtkinter
 from customtkinter import *
 from PIL import *
 import cv2
+
+import start_window
 from tab_view import *
 from tab_config import *
 from db_file import *
@@ -26,7 +28,8 @@ class App(customtkinter.CTk):
         self.fr = MyFrameView(master=self, height=self.winfo_screenheight(), width=self.winfo_screenwidth())
 
 
-take_pass_postgresql()
+# take_pass_postgresql()
+start_window.password_postgres = "tuiiutVT29072001"
 app = App()
 app.mainloop()
 

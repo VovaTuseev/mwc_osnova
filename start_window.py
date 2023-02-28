@@ -49,15 +49,19 @@ def create_database():  # Функция создания БД (Создает, 
 def take_pass_postgresql():  # Функция получения пароля от PostgreSQL с помощью всплывающего окна ----------------------
 
     def close_window_start():
-        global password_postgres
-        password_postgres = get_text()
-        create_database()
-        create_table()
-        if test_connect() is True:
-            start_login_window.destroy()
-        else:
-            label_error = ctk.CTkLabel(main_frame, text='Неверный пароль', text_color='red')
-            label_error.pack(anchor=CENTER)
+        try:
+            global password_postgres
+            password_postgres = get_text()
+            create_database()
+            create_table()
+            create_table_pass_login()
+            if test_connect() is True:
+                start_login_window.destroy()
+            else:
+                label_error = ctk.CTkLabel(main_frame, text='Неверный пароль', text_color='red')
+                label_error.pack(anchor=CENTER)
+        except Exception:
+            print("Ошибка при работе с БД")
 
     def get_text():
         return entry_password.get()
@@ -92,7 +96,7 @@ def create_table():
                                 port="5432",
                                 database="database_cam")
         cur = conn.cursor()
-        cur.execute("select * from information_schema.tables where table_name=%s", ('mytable',))
+        cur.execute("select * from information_schema.tables where table_name=%s", ('USER_CAM',))
         return bool(cur.rowcount)
 
     if check_table() is False:
@@ -126,30 +130,45 @@ def create_table():
                 connection.close()
             print("Соединение с PostgreSQL закрыто")
 
-        # Создание таблицы логин-пароль
+
+# Функция создания таблицы данных логин-пароль -------------------------------------------------------------------------
+def create_table_pass_login():
+    def check_table():
+        conn = psycopg2.connect(user="postgres",
+                                # пароль, который указали при установке PostgreSQL
+                                password=password_postgres,
+                                host="127.0.0.1",
+                                port="5432",
+                                database="database_cam")
+        cur = conn.cursor()
+        cur.execute("select * from information_schema.tables where table_name=%s", ('LOGIN_PASSWORD',))
+        return bool(cur.rowcount)
+
+    if check_table() is False:
+        # Создание таблицы пользователь-данные камер
         try:
             # Подключиться к существующей базе данных
-            connection = psycopg2.connect(user="postgres",
-                                          # пароль, который указали при установке PostgreSQL
-                                          password=password_postgres,
-                                          host="127.0.0.1",
-                                          port="5432",
-                                          database="database_cam")
+            conn = psycopg2.connect(user="postgres",
+                                    # пароль, который указали при установке PostgreSQL
+                                    password=password_postgres,
+                                    host="127.0.0.1",
+                                    port="5432",
+                                    database="database_cam")
 
             # Создайте курсор для выполнения операций с базой данных
-            cursor = connection.cursor()
+            cursor = conn.cursor()
             # SQL-запрос для создания новой таблицы
             create_table_query = '''CREATE TABLE LOGIN_PASSWORD (LOGIN VARCHAR(20) NOT NULL,
-                   PASSWORD VARCHAR(10) NOT NULL; '''
+            PASSWORD VARCHAR(10) NOT NULL); '''
             # Выполнение команды: это создает новую таблицу
             cursor.execute(create_table_query)
-            connection.commit()
+            conn.commit()
             print("Таблица успешно создана в PostgreSQL")
 
-        except Exception as error:
+        except Exception:
             print("Ошибка при создании таблицы в PostgreSQL")
         finally:
-            if connection:
+            if conn:
                 cursor.close()
-                connection.close()
+                conn.close()
             print("Соединение с PostgreSQL закрыто")
