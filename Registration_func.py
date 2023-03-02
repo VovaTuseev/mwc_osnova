@@ -13,8 +13,6 @@ from start_window import password_postgres
 
 def password_check(password):  # Функция проверки задания пароля
     """
-    Verify the strength of 'password'
-    Returns a dict indicating the wrong criteria
     Пароль считается надежным, если:
     - длина 8 символов или более
     - 1 цифра или более
@@ -68,7 +66,7 @@ def registration_function():
                                           database="database_cam")
 
             cursor = connection.cursor()
-            postgres_insert_query = """ INSERT INTO login_password (name_login, name_password)
+            postgres_insert_query = """ INSERT INTO login_password (login, password)
                                                VALUES (%s,%s)"""
             record_to_insert = (login, password)
             cursor.execute(postgres_insert_query, record_to_insert)
@@ -90,7 +88,6 @@ def registration_function():
         insert_rows(start_window.login_acc, 'CAM4')
 
     # Функция записи наименования камер САМ1-САМ4 в таблицу без ip и пароля ----------------------------------------
-
     def insert_rows(login, number_cam):
         try:
 
@@ -102,12 +99,9 @@ def registration_function():
                                           port="5432",
                                           database="database_cam")
 
-            # Создайте курсор для выполнения операций с базой данных
             cursor = connection.cursor()
-            # SQL-запрос для создания новой таблицы
             insert_query = '''INSERT INTO USER_CAM (USERNAME, NAME_CAM, IP_CAM, 
                     PASSWORD_CAM) VALUES (\'''' + str(login) + '''\',\'''' + str(number_cam) + '''\','','');'''
-            # Выполнение команды: это создает новую таблицу
             cursor.execute(insert_query)
             connection.commit()
             print("Строка успешно добавлена в PostgreSQL")
@@ -122,21 +116,23 @@ def registration_function():
 
     def get_text():
         start_window.login_acc = entry_login.get()
-        print(start_window.login_acc)
         password_one = entry_password_first.get()
         password_two = entry_password_second.get()
         r = password_check(password_one)
-
-        if password_one == password_two and r is True:
-            in_bd(start_window.login_acc, password_one)
-            registration_window.destroy()
-        else:
-            if password_one != password_two:
-                label_eror.configure(text="Пароли не совпадают")
+        if check_login() is False:
+            if password_one == password_two and r is True:
+                in_bd(start_window.login_acc, password_one)
+                registration_window.destroy()
+                start_window.login_acc = ""
             else:
-                label_eror.configure(text=password_check(password_one))
-            entry_password_first.delete(0, END)
-            entry_password_second.delete(0, END)
+                if password_one != password_two:
+                    label_eror.configure(text="Пароли не совпадают")
+                else:
+                    label_eror.configure(text=password_check(password_one))
+                entry_password_first.delete(0, END)
+                entry_password_second.delete(0, END)
+        else:
+            label_eror.configure(text="Такой пользователь уже существует")
 
     registration_window = ctk.CTk()
     registration_window.geometry("300x350")
@@ -173,7 +169,23 @@ def registration_function():
     registration_window.mainloop()
 
 
-def authorization_function(entry_login, entry_password):  # Функция обработки авторизации
-    def get_text():
-        login = entry_login.get()
-        password = entry_password.get()
+# Функция проверки не занят ли такой логин (Для регистрации и авторизации)
+def check_login():
+    try:
+        # Подключиться к существующей базе данных
+        connection = psycopg2.connect(user="postgres",
+                                      # пароль, который указали при установке PostgreSQL
+                                      password=start_window.password_postgres,
+                                      host="127.0.0.1",
+                                      port="5432",
+                                      database="database_cam")
+
+        cursor = connection.cursor()
+        create_table_query = """SELECT LOGIN FROM LOGIN_PASSWORD WHERE login = %s """
+        cursor.execute(create_table_query, start_window.login_acc)
+        connection.commit()
+        print("Запись успешно обновлена в PostgreSQL")
+        connection.close()
+
+    except Exception as error:
+        print("Ошибка: Пользователь уже существует в PostgreSQL-", error)
