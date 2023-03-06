@@ -6,6 +6,7 @@ from tkcalendar import Calendar
 import tkinter
 import datetime
 import os
+from tkinter import Canvas
 
 
 class MyFrameView(ctk.CTkFrame):
@@ -28,9 +29,24 @@ class Left_f(ctk.CTkFrame):
         def get_current_info(entry):  # Функция получения позиции курсора в Entry
             return entry.index(INSERT)
 
+        def check_entry():  # Функция корректировки введенных значений в поля дат
+            if len(entry_do.get()) > 0 or len(entry_ot.get()) > 0:
+                list_data_ot = entry_ot.get().split('/')
+                list_data_do = entry_do.get().split('/')
+                a = int(list_data_ot[2]) > int(list_data_do[2])
+                b = int(list_data_ot[0]) > int(list_data_do[0]) and int(list_data_ot[2]) == int(list_data_do[2])
+                c = int(list_data_ot[2]) == int(list_data_do[2]) and int(list_data_ot[0]) == int(list_data_do[0]) \
+                    and int(list_data_ot[1]) > int(list_data_do[1])
+                if a or b or c:
+                    basket = entry_ot.get()
+                    entry_ot.delete(0, END)
+                    entry_ot.insert(0, entry_do.get())
+                    entry_do.delete(0, END)
+                    entry_do.insert(0, basket)
+
         # ---------------------------------------------------------------------------------------------------------------
         super().__init__(master, **kwargs)
-        self.now = datetime.datetime.now()
+        now = datetime.datetime.now()
 
         self.combobox_frame = ctk.CTkFrame(master)
         self.period_frame = ctk.CTkFrame(master)
@@ -51,16 +67,16 @@ class Left_f(ctk.CTkFrame):
         label_ot.grid(column=0, row=0, padx=35, pady=0)
 
         label_do = ctk.CTkLabel(self.ot_do_label, text="До")
-        label_do.grid(column=1, row=0, ipadx=105, pady=0)
+        label_do.grid(column=1, row=0, ipadx=120, pady=0)
 
         entry_ot = ctk.CTkEntry(self.ot_do_box, width=80)
         entry_ot.grid(column=0, row=0, padx=30, pady=5)
 
         entry_do = ctk.CTkEntry(self.ot_do_box, width=80)
-        entry_do.grid(column=1, row=0, padx=45, pady=5)
+        entry_do.grid(column=1, row=0, padx=37, pady=5)
 
         # Настройка календаря
-        cal = Calendar(self.cal_frame, selectmode="day", year=self.now.year, month=self.now.month, day=self.now.day,
+        cal = Calendar(self.cal_frame, selectmode="day", year=now.year, month=now.month, day=now.day,
                        font="helvetica 12")
         cal.pack(anchor=W, padx=29, pady=20)
 
@@ -81,7 +97,7 @@ class Left_f(ctk.CTkFrame):
                 try:
                     current_entry.insert('insert', grad_date(current_entry))
                 except BaseException:
-                    print('Norm')
+                    print('Ввод данных в поля дат')
 
         def mouse_click_1(event):  # Функция одиночного нажатия
             entry_ot.after(300, mouse_action, event)
@@ -98,6 +114,7 @@ class Left_f(ctk.CTkFrame):
             if double_click_flag:
                 on_click()
                 double_click_flag = False
+                check_entry()
 
         entry_ot.bind('<Button-1>', mouse_click_1)
         entry_ot.bind('<Double-1>', double_click)
@@ -126,3 +143,8 @@ class Left_f(ctk.CTkFrame):
         self.cal_frame.pack(anchor=W)
         self.button_frame.pack(anchor=W)
         self.label_list_frame.pack(anchor=W)
+        # --------------------------------------------------------------------------------------------------------------
+        # Настройка видеоплейера
+        self.video_frame = ctk.CTkFrame(master)
+        place_video = Canvas(self.video_frame, width=200, height=200, bg='white')
+        place_video.place(x=400, y=200)

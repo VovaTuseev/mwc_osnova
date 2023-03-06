@@ -5,6 +5,8 @@ import start_window
 from start_window import password_postgres
 from start_window import login_acc
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from tkinter.filedialog import askopenfilename
+import os
 
 
 def set_text(entry, text):
@@ -63,3 +65,20 @@ def load_data_bd(number_cam, ent_ip, ent_pas):
 
     except Exception as error:
         print("Ошибка при обновлении записей в PostgreSQL", error)
+
+
+def func_get_way(entry):
+    try:
+        os.makedirs("folder_records/CAM1")
+        os.makedirs("folder_records/CAM2")
+        os.makedirs("folder_records/CAM3")
+        os.makedirs("folder_records/CAM4")
+    except Exception:
+        print("Папки уже созданы")
+
+    entry.insert(0, os.getcwd() + "/folder_records")
+
+
+def func_open_path():
+    os.startfile("folder_records")
+

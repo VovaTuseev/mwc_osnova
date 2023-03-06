@@ -6,7 +6,7 @@ from PIL import ImageTk, Image
 import start_window
 import work_with_config_cam_frame
 from Registration_func import registration_function
-from work_with_config_cam_frame import set_data_options_cam, load_data_bd
+from work_with_config_cam_frame import set_data_options_cam, load_data_bd, func_get_way
 from Autorization_func import check_login_password
 import chess
 import chess.svg
@@ -464,14 +464,19 @@ class ConfigWayRecords(ctk.CTkFrame):
     def __init__(self, master):
         ctk.CTkFrame.__init__(self, master)
 
+        def insert_path():
+            func_get_way(entry_way)
+
         self.frame_btn_entry = ctk.CTkFrame(self, fg_color='transparent')
 
         img = ctk.CTkImage(dark_image=Image.open('papka-transformed.png'), size=(15, 15))
 
         label_way = ctk.CTkLabel(self, text='Путь сохранения видеозаписей', padx=20, pady=20)
         entry_way = ctk.CTkEntry(self.frame_btn_entry, width=150)
-        btn_way = ctk.CTkButton(self.frame_btn_entry, text='', width=30, image=img)
-        btn_open_way = ctk.CTkButton(self, text='Открыть', width=30)
+        btn_way = ctk.CTkButton(self.frame_btn_entry, text='', width=30, image=img,
+                                command=insert_path)
+        btn_open_way = ctk.CTkButton(self, text='Открыть', width=30,
+                                     command=work_with_config_cam_frame.func_open_path)
 
         label_way.pack(anchor=CENTER, padx=5)
         entry_way.grid(row=0, column=0, padx=15)
