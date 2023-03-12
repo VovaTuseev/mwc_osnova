@@ -30,7 +30,7 @@ class MyConfigFrame(ctk.CTkFrame):
         self.way_s_f.place(x=1273, y=20)
         self.way_s_f.configure(fg_color='#313131')
 
-        img = ctk.CTkImage(dark_image=Image.open("LOGOPNG.png"), size=(700, 175))
+        img = ctk.CTkImage(dark_image=Image.open("Photo/LOGOPNG.png"), size=(700, 175))
         self.label_logo = ctk.CTkLabel(master, text='', image=img)
         self.label_logo.place(x=420, y=470)
 
@@ -109,7 +109,7 @@ class AuthorizationFrame(ctk.CTkFrame):
 
         font_main = ctk.CTkFont(family="helvetica", size=15)
 
-        img = ctk.CTkImage(dark_image=Image.open("ava-transformed.png"), size=(100, 100))
+        img = ctk.CTkImage(dark_image=Image.open("Photo/ava-transformed.png"), size=(100, 100))
 
         label_ava = CTkLabel(self, text='', image=img)
 
@@ -163,7 +163,7 @@ class AuthorizationFrameTrue(ctk.CTkFrame):
 
         font_main = ctk.CTkFont(family="helvetica", size=15)
 
-        img = ctk.CTkImage(dark_image=Image.open("ava-transformed.png"), size=(100, 100))
+        img = ctk.CTkImage(dark_image=Image.open("Photo/ava-transformed.png"), size=(100, 100))
         label_ava = CTkLabel(self, text='', image=img)
         label_ava.pack(padx=80, pady=10)
 
@@ -469,7 +469,7 @@ class ConfigWayRecords(ctk.CTkFrame):
 
         self.frame_btn_entry = ctk.CTkFrame(self, fg_color='transparent')
 
-        img = ctk.CTkImage(dark_image=Image.open('papka-transformed.png'), size=(15, 15))
+        img = ctk.CTkImage(dark_image=Image.open('Photo/papka-transformed.png'), size=(15, 15))
 
         label_way = ctk.CTkLabel(self, text='Путь сохранения видеозаписей', padx=20, pady=20)
         entry_way = ctk.CTkEntry(self.frame_btn_entry, width=150)

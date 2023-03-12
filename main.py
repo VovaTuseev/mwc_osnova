@@ -3,7 +3,7 @@ import psycopg2
 from customtkinter import *
 from PIL import *
 import cv2
-
+import tkinter as tk
 import start_window
 from tab_view import *
 from tab_config import *
@@ -29,12 +29,9 @@ class App(customtkinter.CTk):
 
 
 #take_pass_postgresql()
-start_window.password_postgres = "tuiiutVT29072001"
+#start_window.password_postgres = "tuiiutVT29072001"
 app = App()
 app.mainloop()
 
-# j = ctk.CTk()
-# fr = ConfigPlaceCam(j)
-# fr.pack()
-# j.mainloop()
+
 

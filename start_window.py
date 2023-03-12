@@ -7,6 +7,10 @@ login_acc = ''
 password_acc = ''
 registration_acc = ''
 password_postgres = ''
+number_cam = ''
+path_video = ''
+second_video = 0
+flag_load_video = False
 
 
 def test_connect():  # Функция проверки подключения
