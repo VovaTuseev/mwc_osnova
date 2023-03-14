@@ -119,7 +119,7 @@ def registration_function():
         password_one = entry_password_first.get()
         password_two = entry_password_second.get()
         r = password_check(password_one)
-        if check_login() is False:
+        if check_login() is False and len(str(entry_login.get())) != 0:
             if password_one == password_two and r is True:
                 in_bd(start_window.login_acc, password_one)
                 registration_window.destroy()

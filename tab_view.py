@@ -6,8 +6,11 @@ from tkcalendar import Calendar
 import tkinter
 import datetime
 import os
+import threading
+from threading import Thread
 from tab_show import *
 from tab_config import *
+from tab_monitoring import *
 
 
 class MyTabView(customtkinter.CTkTabview):
@@ -21,4 +24,6 @@ class MyTabView(customtkinter.CTkTabview):
         self.left_view_frame = MyFrameView(self.tab("Просмотр записей"))
 
         self.left_config_frame = MyConfigFrame(self.tab("Конфигурация"))
+
+        self.frame_vid = videoFrame(self.tab("Наблюдение"))
 

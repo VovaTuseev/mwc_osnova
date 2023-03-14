@@ -6,6 +6,8 @@ import cv2
 import tkinter as tk
 import start_window
 from tab_view import *
+from tab_monitoring import *
+import tkinter as tk
 from tab_config import *
 from start_window import test_connect
 
@@ -25,7 +27,8 @@ class App(customtkinter.CTk):
         self.tab_view = MyTabView(master=self)
         self.tab_view.pack()
 
-        self.fr = MyFrameView(master=self, height=self.winfo_screenheight(), width=self.winfo_screenwidth())
+        #self.frame_show = MyFrameView(master=self, height=self.winfo_screenheight(), width=self.winfo_screenwidth())
+        #elf.frame_show.pack()
 
 
 #take_pass_postgresql()

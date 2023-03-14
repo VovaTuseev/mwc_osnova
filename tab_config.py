@@ -17,12 +17,6 @@ class MyConfigFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
-        # self.left_s_f = RegistrationAuthorizationFrame(master)
-        # self.left_s_f.place(x=30, y=20)
-
-        # self.right_s_f = ConfigPlaceCam(master)
-        # self.right_s_f.place(x=325, y=20)
-
         self.frame_l = registration_configCam(master)
         self.frame_l.place(x=20, y=20)
 
