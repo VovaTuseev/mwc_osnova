@@ -11,6 +11,8 @@ from threading import Thread
 from tab_show import *
 from tab_config import *
 from tab_monitoring import *
+from threading import Thread
+from multiprocessing import *
 
 
 class MyTabView(customtkinter.CTkTabview):
@@ -21,9 +23,20 @@ class MyTabView(customtkinter.CTkTabview):
         self.add("Просмотр записей")
         self.add("Конфигурация")
 
-        self.left_view_frame = MyFrameView(self.tab("Просмотр записей"))
 
-        self.left_config_frame = MyConfigFrame(self.tab("Конфигурация"))
+        def create_view():
+            self.left_view_frame = MyFrameView(self.tab("Просмотр записей"))
+        t1 = Thread(target=create_view, args=())
 
-        self.frame_vid = videoFrame(self.tab("Наблюдение"))
+        def create_show():
+            self.left_config_frame = MyConfigFrame(self.tab("Конфигурация"))
+        t2 = Thread(target=create_show, args=())
+
+        def create_config():
+            self.frame_vid = videoFrame(self.tab("Наблюдение"))
+        t3 = Thread(target=create_config, args=())
+
+        t1.start()
+        t2.start()
+        t3.start()
 

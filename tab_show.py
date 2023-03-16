@@ -8,12 +8,16 @@ import datetime
 import os
 from tkVideoPlayer import TkinterVideo
 import start_window
+from threading import Thread
 
 
 class MyFrameView(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.left_frame = fullFrameShow(master)
+        def frame():
+            self.left_frame = fullFrameShow(master)
+        t = Thread(target=frame, args=())
+        t.start()
 
 
 class fullFrameShow(ctk.CTkFrame):
